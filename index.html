@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Documentation for a Docker-based HTML cleanup project using Python and BeautifulSoup.">
+    <title>Docker-Based HTML Cleanup</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <p class="eyebrow">PROJECT DOCUMENTATION</p>
+        <h1>Docker-Based HTML Cleanup</h1>
+        <p class="header-description">
+            A documented workflow for processing a local website copy
+            using Docker, Python and BeautifulSoup.
+        </p>
+        <div class="header-tags">
+            <span>Docker</span>
+            <span>Python 3.12</span>
+            <span>BeautifulSoup</span>
+            <span>macOS</span>
+        </div>
+    </div>
+</header>
+
+<div class="container page-layout">
+
+    <aside class="sidebar">
+        <h2>Contents</h2>
+        <nav>
+            <a href="#overview">Overview</a>
+            <a href="#environment">Environment</a>
+            <a href="#structure">Project structure</a>
+            <a href="#commands">Commands</a>
+            <a href="#workflow">Processing workflow</a>
+            <a href="#results">Final results</a>
+            <a href="#output">Accessing the output</a>
+            <a href="#shutdown">Stopping Docker</a>
+            <a href="#limitations">Notes and limitations</a>
+            <a href="#conclusion">Conclusion</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>
+                This project documents a Docker-based workflow for processing
+                a local copy of a website. A Python script runs inside a Docker
+                container to discover HTML files and remove selected page
+                elements identified by the IDs <code>header</code>,
+                <code>sidebar</code> and <code>footer</code>.
+            </p>
+            <p>
+                The workflow covers preparing the project environment,
+                building a Docker image, running the processing script,
+                reviewing the reported results, accessing the output directory
+                and stopping Docker Desktop on macOS.
+            </p>
+            <div class="info-box">
+                <strong>Project objective</strong>
+                <p>
+                    Produce a separate collection of processed HTML files
+                    while keeping the original website copy in its own
+                    input directory.
+                </p>
+            </div>
+        </section>
+
+        <section id="environment">
+            <h2>Environment</h2>
+            <p>The terminal session reported the following environment:</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <tbody>
+                        <tr><th>Host operating system</th><td>macOS</td></tr>
+                        <tr><th>Host shell</th><td>zsh</td></tr>
+                        <tr><th>Docker version</th><td>29.8.0, build 88096ef</td></tr>
+                        <tr><th>Docker runtime</th><td>Docker Desktop</td></tr>
+                        <tr><th>Docker builder</th><td>docker:desktop-linux</td></tr>
+                        <tr><th>Base image</th><td><code>python:3.12-slim</code></td></tr>
+                        <tr><th>Python dependency</th><td><code>beautifulsoup4</code></td></tr>
+                        <tr><th>Project directory</th><td><code>html-editor</code></td></tr>
+                        <tr><th>Input directory</th><td><code>websitename-copy</code></td></tr>
+                        <tr><th>Processing script</th><td><code>edit_html.py</code></td></tr>
+                        <tr><th>Docker image</th><td><code>html-editor</code></td></tr>
+                        <tr><th>Output directory</th><td><code>websitename-cleaned</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="structure">
+            <h2>Project Structure</h2>
+            <p>
+                The project uses a dedicated directory for the Docker
+                configuration, Python script, original website files and
+                processed output.
+            </p>
+            <pre><code>html-editor/
+├── Dockerfile
+├── edit_html.py
+├── websitename-copy/
+└── websitename-cleaned/</code></pre>
+            <p class="muted">
+                The output directory was reported by the script. Its contents
+                were not independently verified in the recorded session.
+            </p>
+        </section>
+
+        <section id="commands">
+            <h2>Commands and Explanations</h2>
+
+            <article class="command-card">
+                <h3>1. Check Docker</h3>
+                <pre><code>docker --version</code></pre>
+                <p>
+                    Checks whether Docker is installed and available in
+                    the terminal.
+                </p>
+                <p><strong>Observed result:</strong> Docker version 29.8.0, build 88096ef.</p>
+            </article>
+
+            <article class="command-card">
+                <h3>2. Create the project directory</h3>
+                <pre><code>mkdir html-editor
+cd html-editor</code></pre>
+                <ul>
+                    <li><code>mkdir</code> creates the project workspace.</li>
+                    <li><code>cd</code> changes the current directory to that workspace.</li>
+                </ul>
+            </article>
+
+            <article class="command-card">
+                <h3>3. Create or edit the Dockerfile</h3>
+                <pre><code>nano Dockerfile</code></pre>
+                <p>
+                    Opens the Nano editor to create or edit the Dockerfile.
+                    This file defines the instructions used to build the
+                    Docker image.
+                </p>
+                <p class="muted">
+                    The exact Dockerfile contents were not included in
+                    the supplied terminal transcript.
+                </p>
+            </article>
+
+            <article class="command-card">
+                <h3>4. Build the Docker image</h3>
+                <pre><code>docker build -t html-editor .</code></pre>
+                <ul>
+                    <li><code>docker build</code> starts the image build.</li>
+                    <li><code>-t html-editor</code> assigns the image a name.</li>
+                    <li><code>.</code> uses the current directory as the build context.</li>
+                </ul>
+                <p>
+                    <strong>Observed result:</strong> The image build completed
+                    successfully. The build output showed the
+                    <code>python:3.12-slim</code> base image and installation
+                    of <code>beautifulsoup4</code>.
+                </p>
+            </article>
+
+            <article class="command-card">
+                <h3>5. Create or edit the Python script</h3>
+                <pre><code>nano edit_html.py</code></pre>
+                <p>
+                    Opens the Python processing script in Nano. The script
+                    performs HTML-file discovery and cleanup.
+                </p>
+                <p class="muted">
+                    The exact source code was not included in the transcript.
+                </p>
+            </article>
+
+            <article class="command-card">
+                <h3>6. Inspect the project directory</h3>
+                <pre><code>ls</code></pre>
+                <p>Lists files and folders in the current directory.</p>
+                <p><strong>Observed entries:</strong> <code>Dockerfile</code>,
+                    <code>edit_html.py</code> and <code>websitename-copy</code>.</p>
+            </article>
+
+            <article class="command-card">
+                <h3>7. Run the file-discovery pass</h3>
+                <pre><code>docker run --rm -v "$(pwd):/app" html-editor python edit_html.py</code></pre>
+                <p>Runs the Python script inside a temporary container.</p>
+                <ul>
+                    <li><code>docker run</code> starts a container.</li>
+                    <li><code>--rm</code> removes the container after it exits.</li>
+                    <li><code>-v "$(pwd):/app"</code> mounts the current host directory at <code>/app</code> inside the container.</li>
+                    <li><code>html-editor</code> identifies the image.</li>
+                    <li><code>python edit_html.py</code> executes the script.</li>
+                </ul>
+                <p>
+                    <strong>Observed result:</strong> The first recorded run
+                    reported finding 354 HTML files and printed their paths.
+                </p>
+            </article>
+
+            <article class="command-card">
+                <h3>8. Return to the project directory and revise the script</h3>
+                <pre><code>cd ~/html-editor
+nano edit_html.py</code></pre>
+                <p>
+                    Returns to the project directory under the user's home
+                    directory and reopens the Python script for editing.
+                </p>
+                <p class="muted">
+                    The transcript confirms another edit but does not show
+                    the precise code changes.
+                </p>
+            </article>
+
+            <article class="command-card">
+                <h3>9. Run the cleanup pass</h3>
+                <pre><code>docker run --rm -v "$(pwd):/app" html-editor python edit_html.py</code></pre>
+                <p>
+                    Runs the updated script in a fresh temporary container
+                    with the project directory mounted at <code>/app</code>.
+                </p>
+                <p><strong>Reported output:</strong></p>
+                <ul>
+                    <li>354 HTML files found</li>
+                    <li>Cleanup started</li>
+                    <li>Cleanup completed</li>
+                    <li>353 header elements removed</li>
+                    <li>353 sidebar elements removed</li>
+                    <li>353 footer elements removed</li>
+                    <li>Output saved in <code>/app/websitename-cleaned</code></li>
+                </ul>
+            </article>
+        </section>
+
+        <section id="workflow">
+            <h2>Processing Workflow</h2>
+            <ol class="workflow">
+                <li>
+                    <strong>Prepare the workspace</strong>
+                    <p>Create the <code>html-editor</code> directory and place
+                    the project files and website copy in it.</p>
+                </li>
+                <li>
+                    <strong>Build the runtime image</strong>
+                    <p>Build the <code>html-editor</code> image using the
+                    Dockerfile, Python 3.12 slim and BeautifulSoup.</p>
+                </li>
+                <li>
+                    <strong>Create and revise the script</strong>
+                    <p>Use Nano to create or edit <code>edit_html.py</code>.</p>
+                </li>
+                <li>
+                    <strong>Discover the input files</strong>
+                    <p>The first execution reported 354 HTML files.</p>
+                </li>
+                <li>
+                    <strong>Clean the HTML pages</strong>
+                    <p>The second execution reported 353 removals for each
+                    of the three target IDs.</p>
+                </li>
+                <li>
+                    <strong>Write the output</strong>
+                    <p>The script reported saving processed files in
+                    <code>websitename-cleaned</code>.</p>
+                </li>
+            </ol>
+        </section>
+
+        <section id="results">
+            <h2>Final Results</h2>
+            <p>The final successful processing run reported:</p>
+            <div class="results-grid">
+                <div class="result-card">
+                    <span class="result-number">354</span>
+                    <span class="result-label">HTML files discovered</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-number">353</span>
+                    <span class="result-label">Header elements removed</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-number">353</span>
+                    <span class="result-label">Sidebar elements removed</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-number">353</span>
+                    <span class="result-label">Footer elements removed</span>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>Reported status: Cleanup complete!</strong>
+                <p>Reported output path: <code>/app/websitename-cleaned</code></p>
+            </div>
+
+            <p class="muted">
+                The log does not explain why each removal count was 353
+                rather than 354. The counts do not establish that all
+                354 files contained all three elements.
+            </p>
+        </section>
+
+        <section id="output">
+            <h2>Accessing the Output</h2>
+            <p>
+                The script reported the output directory as
+                <code>/app/websitename-cleaned</code>. However, the
+                <code>/app</code> path is inside the Docker container.
+                It is not the direct path used by the macOS host shell.
+            </p>
+
+            <h3>Incorrect host-side command</h3>
+            <pre><code>cd /app/websitename-cleaned</code></pre>
+            <p>
+                This command failed in the host shell because
+                <code>/app</code> is the container mount point.
+            </p>
+
+            <h3>Correct host-side commands</h3>
+            <pre><code>cd ~/html-editor/websitename-cleaned
+ls</code></pre>
+            <p>
+                Assuming the project is located in
+                <code>~/html-editor</code>, these commands navigate to
+                the output directory and list its contents.
+            </p>
+            <p class="warning-box">
+                The transcript does not show a successful listing of the
+                output directory. Its contents were therefore not
+                independently verified in the recorded session.
+            </p>
+        </section>
+
+        <section id="shutdown">
+            <h2>Stopping Docker Desktop on macOS</h2>
+            <p>
+                After the cleanup and verification are complete, Docker
+                Desktop can be stopped.
+            </p>
+
+            <h3>Option 1: Using Terminal</h3>
+            <pre><code>osascript -e 'quit app "Docker"'</code></pre>
+            <p>
+                Asks macOS to quit the Docker Desktop application.
+            </p>
+
+            <h3>Option 2: Using the Docker Desktop menu</h3>
+            <ol>
+                <li>Click the Docker whale icon in the macOS menu bar.</li>
+                <li>Select <strong>Quit Docker Desktop</strong>.</li>
+            </ol>
+
+            <h3>Verify that Docker has stopped</h3>
+            <pre><code>docker info >/dev/null 2>&1 && echo "Docker is running" || echo "Docker is not running"</code></pre>
+
+            <p>Expected output after Docker Desktop has fully stopped:</p>
+            <pre><code>Docker is not running</code></pre>
+
+            <p>
+                This command suppresses normal output and error messages
+                from <code>docker info</code>. It checks whether the Docker
+                CLI can communicate with the Docker daemon. If Docker
+                Desktop is still shutting down, wait briefly and run the
+                check again.
+            </p>
+
+            <div class="warning-box">
+                <strong>Important Docker notes</strong>
+                <ul>
+                    <li>Quitting Docker Desktop stops the Docker daemon and its running containers.</li>
+                    <li>The <code>--rm</code> option removes the temporary container after it exits. It does not remove the <code>html-editor</code> image.</li>
+                    <li>The cleaned HTML files are stored in the mounted host project directory. Quitting Docker Desktop does not delete those files.</li>
+                    <li>Start Docker Desktop again and wait for its engine to become available before running more Docker commands.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="limitations">
+            <h2>Notes and Limitations</h2>
+            <ul>
+                <li>This documentation is based on the supplied terminal transcript and project report.</li>
+                <li>The exact contents of <code>Dockerfile</code> and <code>edit_html.py</code> were not included.</li>
+                <li>The log confirms that the Docker image built and the script reported <code>Cleanup complete!</code>.</li>
+                <li>No before-and-after HTML comparison was included.</li>
+                <li>No browser-based validation was included to confirm that all pages render correctly after cleanup.</li>
+                <li>The log reports 354 discovered HTML files and 353 removals for each target ID. It does not explain the difference.</li>
+                <li>The output directory was reported by the script, but its contents were not independently verified in the recorded session.</li>
+            </ul>
+        </section>
+
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>
+                A Docker-based Python environment was successfully prepared
+                and used to process a local collection of website HTML pages.
+                The processing script found 354 HTML files and reported
+                removing header, sidebar and footer elements 353 times each.
+            </p>
+            <p>
+                The cleaned output was directed to
+                <code>websitename-cleaned</code>. The command-line issue
+                occurred afterward, when a container-internal path was
+                used from the host macOS shell. This path issue does not
+                indicate that the cleanup operation itself failed.
+            </p>
+            <p>
+                The workflow can be completed by checking the output
+                directory on the host Mac and quitting Docker Desktop
+                when no further container work is required.
+            </p>
+        </section>
+
+        <footer class="page-footer">
+            <p>Docker-Based HTML Cleanup · Project Documentation</p>
+            <p>Based on the supplied terminal session dated 5 November.</p>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>
