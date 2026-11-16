@@ -27,6 +27,7 @@ html-editor/
 ├── edit_html.py
 ├── websitename-copy/
 └── websitename-cleaned/
+└── LICENSE
 ```
 
 The output directory is created by the processing script, according to the terminal output.
